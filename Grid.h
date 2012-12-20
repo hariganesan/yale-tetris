@@ -19,5 +19,7 @@ class Grid {
 
 		int getCurrentHeight();
 		void enterSingleBlock(int column); // enter block given column
+		void checkShift(); // check to see which (if any) shifts need to be made
+		void shiftDown(int row); // shift down one based on row
 		void printGrid(); // print out entire grid
 };

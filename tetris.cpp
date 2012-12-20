@@ -6,8 +6,6 @@
 #include <string>
 #include "Grid.h"
 
-
-
 using namespace std;
 
 int main() {
@@ -39,6 +37,7 @@ int main() {
 
 		// update grid state
 		g.enterSingleBlock(position - 1);
+		g.checkShift();
 		// update grid display/display grid
 		g.printGrid();
 	}
