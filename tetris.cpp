@@ -17,7 +17,7 @@ int main() {
 
 	// main loop
 	// while game is not over (height != 10)
-	while (g.getCurrentHeight() != 10) {
+	while (g.getCurrentHeight() != GRID_HEIGHT) {
 		// grab and display next piece
 		// allow input for position, rotation
 

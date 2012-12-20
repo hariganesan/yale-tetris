@@ -4,6 +4,7 @@
 #include "Grid.h"
 
 using namespace std;
+//TODO: enum for EMPTY and FILLED
 
 Grid::Grid() {
 	currentSpeed = 1;
@@ -78,7 +79,8 @@ void Grid::shiftDown(int row) {
 
 void Grid::printGrid() {
 	for (int i = GRID_HEIGHT - 1; i >= 0; i--) {
-		cout << i << " ";
+		cout << i+1 << ": ";
+
 		for (int j = 0; j < GRID_WIDTH; j++)
 			cout << grid[i][j] << " ";
 
