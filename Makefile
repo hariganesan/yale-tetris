@@ -19,3 +19,4 @@ Grid.o: Grid.cpp Grid.h
 
 clean:
 	rm *.o
+	rm *.h.gch
