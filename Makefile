@@ -14,7 +14,7 @@ tetris: tetris.o Grid.o
 tetris.o: tetris.cpp Grid.h
 	$(CC) $(CFLAGS) -c $^
 
-Grid.o: Grid.h
+Grid.o: Grid.cpp Grid.h
 	$(CC) $(CFLAGS) -c $^
 
 clean:
