@@ -17,6 +17,9 @@ tetris.o: tetris.cpp Grid.h
 Grid.o: Grid.cpp Grid.h
 	$(CC) $(CFLAGS) -c $^
 
+move:
+	cd src/
+
 clean:
 	rm *.o
 	rm *.h.gch

@@ -9,10 +9,6 @@ Grid::Grid() {
 	currentSpeed = 1;
 	currentHeight = 0;
 
-	// TODO: change to inputs
-	//int newGrid[10][10];
-	//this.grid = newGrid;
-
 	// initialize grid
 	for (int i = 0; i < GRID_HEIGHT; i++) {
 		for (int j = 0; j < GRID_WIDTH; j++) {
