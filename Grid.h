@@ -15,7 +15,7 @@ class Grid {
 		int currentHeight; // height of highest filled box
 		int currentSpeed; // current speed
 	public:
-		Grid();
+		Grid(); // default constructor
 
 		int getCurrentHeight();
 		void enterSingleBlock(int column); // enter block given column

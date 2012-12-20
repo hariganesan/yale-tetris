@@ -37,11 +37,9 @@ int main() {
 			ss >> position;
 		} while (ss.fail() || position > GRID_WIDTH || position < 1);
 
-
 		// update grid state
-		// change to zero index
 		g.enterSingleBlock(position - 1);
-		// update grid display
+		// update grid display/display grid
 		g.printGrid();
 	}
 
