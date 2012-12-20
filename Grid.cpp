@@ -36,12 +36,23 @@ int Grid::getCurrentHeight() {
 }
 
 void Grid::enterSingleBlock(int column) {
-	if (grid[columnHeights[column] + 1][column] != 0)
+	// check for errors
+	if (grid[columnHeights[column]][column] != 0)
 		fprintf(stderr, "error: misplaced block\n");
+
+	// add block and increase column height and row stuffing
+	grid[columnHeights[column]][column]++;
+	columnHeights[column]++;
+	rowStuffings[columnHeights[column]]++;
+
+	// update current height if needed
+	if (columnHeights[column] > currentHeight)
+		currentHeight = columnHeights[column];
 }
 
 void Grid::printGrid() {
-	for (int i = 0; i < GRID_HEIGHT; i++) {
+	for (int i = GRID_HEIGHT - 1; i >= 0; i--) {
+		cout << i << " ";
 		for (int j = 0; j < GRID_WIDTH; j++) {
 			cout << grid[i][j] << " ";
 		}
