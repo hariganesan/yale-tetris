@@ -4,16 +4,20 @@
 #include <iostream>
 #include <string>
 
+const int GRID_HEIGHT = 10;
+const int GRID_WIDTH = 10;
+
 class Grid {
 	private:
-		int height; // grid dimension
-		int width; // grid dimension
+		int grid[GRID_HEIGHT][GRID_WIDTH]; // grid pointer
+		int columnHeights[GRID_WIDTH]; // how high each column is
+		int rowStuffings[GRID_HEIGHT]; // how many filled in each row
 		int currentHeight; // height of highest filled box
 		int currentSpeed; // current speed
 	public:
-		Grid(const int& h, const int& w);
-		
+		Grid();
+
 		int getCurrentHeight();
-		void fillGrid(); // fill grid with 1s
-		void printGrid();
+		void enterSingleBlock(int column); // enter block given column
+		void printGrid(); // print out entire grid
 };

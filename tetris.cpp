@@ -5,18 +5,16 @@
 #include <string>
 #include "Grid.h"
 
-const int GRID_HEIGHT = 10;
-const int GRID_WIDTH = 10;
+
 
 using std::cout;
 using std::endl;
 
 int main() {
-	cout << "running program" << endl;
+	cout << "running program\n" << endl;
 
-	Grid g = Grid(GRID_HEIGHT, GRID_WIDTH);
+	Grid g = Grid();
 
-	g.fillGrid();
 	g.printGrid();
 
 	// main loop
