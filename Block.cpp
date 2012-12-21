@@ -6,15 +6,49 @@
 using namespace std;
 
 Block::Block() {
-	// TODO: randomly select block from given choices
 	// initialize block as 0s
 	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
 		for (int j = 0; j < MAX_BLOCK_DIM; j++)
 			grid[i][j] = 0;
 	}
 
-	for (int j = 0; j < MAX_BLOCK_DIM; j++) {
-		grid[0][j] = 1;
+	// NOTE: based on 4x4 block
+
+	// fill in a couple 1s
+	grid[0][1] = 1;
+	grid[0][2] = 1;
+
+	// randomly select the rest
+	srand(time(0));
+	switch (rand() % 7) {
+		case 0:
+			grid[0][0] = 1;
+			grid[1][0] = 1;
+			break;
+		case 1:
+			grid[0][3] = 1;
+			grid[1][3] = 1;
+			break;
+		case 2:
+			grid[1][0] = 1;
+			grid[1][1] = 1;
+			break;
+		case 3:
+			grid[1][2] = 1;
+			grid[1][3] = 1;
+			break;
+		case 4:
+			grid[0][0] = 1;
+			grid[0][3] = 1;
+			break;
+		case 5:
+			grid[1][1] = 1;
+			grid[1][2] = 1;
+		case 6:
+			grid[0][0] = 1;
+			grid[1][1] = 1;
+		default:
+			fprintf(stderr, "error: rand()");
 	}
 }
 
