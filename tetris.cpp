@@ -9,12 +9,28 @@
 
 using namespace std;
 
+void runGame(); // runs the tetris game
+
 int main() {
 	cout << "running program\n" << endl;
 
-	Grid g = Grid();
+	Block b = Block();
 
-	g.printGrid();
+	b.printBlock();
+
+	b.rotateBlockCCW();
+	b.rotateBlockCCW();
+
+	b.printBlock();
+
+	//runGame();
+
+	return EXIT_SUCCESS;
+}
+
+void runGame() {
+	cout << "game initialized" << endl;
+	Grid g = Grid();
 
 	// main loop
 	// while game is not over (height != 10)
@@ -45,5 +61,5 @@ int main() {
 
 	cout << "\nGame Over" << endl;
 
-	return EXIT_SUCCESS;
+	return;
 }

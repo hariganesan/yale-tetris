@@ -6,8 +6,16 @@
 using namespace std;
 
 Block::Block() {
-	// randomly select block from given choices
-	;
+	// TODO: randomly select block from given choices
+	// initialize block as 0s
+	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
+		for (int j = 0; j < MAX_BLOCK_DIM; j++)
+			grid[i][j] = 0;
+	}
+
+	for (int j = 0; j < MAX_BLOCK_DIM; j++) {
+		grid[0][j] = 1;
+	}
 }
 
 void Block::rotateBlockCW() {
@@ -16,7 +24,7 @@ void Block::rotateBlockCW() {
 	// push to new array
 	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
 		for (int j = 0; j < MAX_BLOCK_DIM; j++)
-			newGrid[j][MAX_BLOCK_DIM - i] = grid[i][j];
+			newGrid[MAX_BLOCK_DIM - j - 1][i] = grid[i][j];
 	}
 
 	// move back to original array
@@ -31,8 +39,8 @@ void Block::rotateBlockCCW() {
 
 	// push to new array
 	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++)
-			newGrid[MAX_BLOCK_DIM - j][i] = grid[i][j];
+		for (int j = 0; j < MAX_BLOCK_DIM; j++)	
+			newGrid[j][MAX_BLOCK_DIM - i - 1] = grid[i][j];
 	}
 
 	// push back to original array
@@ -45,7 +53,7 @@ void Block::rotateBlockCCW() {
 void Block::printBlock() {
 	for (int i = MAX_BLOCK_DIM - 1; i >= 0; i--) {
 		for (int j = 0; j < MAX_BLOCK_DIM; j++)
-			cout << grid[i][j] << " " << endl;
+			cout << grid[i][j] << " ";
 
 		cout << endl;
 	}

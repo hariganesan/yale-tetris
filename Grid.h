@@ -9,7 +9,7 @@ const int GRID_WIDTH = 10;
 
 class Grid {
 private:
-	int grid[GRID_HEIGHT][GRID_WIDTH]; // grid pointer
+	int grid[GRID_HEIGHT][GRID_WIDTH];
 	int columnHeights[GRID_WIDTH]; // how high each column is
 	int rowStuffings[GRID_HEIGHT]; // how many filled in each row
 	int currentHeight; // height of highest filled box
