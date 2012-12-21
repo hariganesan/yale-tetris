@@ -8,17 +8,17 @@ CFLAGS=-pedantic -Wall
 # build tetris and remove .o files
 all: tetris clean
 
-tetris: tetris.o Grid.o
+tetris: tetris.o Grid.o Block.o
 	$(CC) -o $@ $^
 
-tetris.o: tetris.cpp Grid.h
+tetris.o: tetris.cpp Grid.h Block.h
 	$(CC) $(CFLAGS) -c $^
 
 Grid.o: Grid.cpp Grid.h
 	$(CC) $(CFLAGS) -c $^
 
-move:
-	cd src/
+Block.o: Block.cpp Block.h
+	$(CC) $(CFLAGS) -c $^
 
 clean:
 	rm *.o

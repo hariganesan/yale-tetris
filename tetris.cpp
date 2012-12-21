@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include "Block.h"
 #include "Grid.h"
 
 using namespace std;
