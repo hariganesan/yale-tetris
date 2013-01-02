@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
-#include <time.h>
+#include <ctime>
 
 #define MAX_BLOCK_DIM 4
 

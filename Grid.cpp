@@ -34,8 +34,10 @@ int Grid::getCurrentHeight() {
 
 void Grid::enterSingleBlock(int column) {
 	// check for errors
-	if (grid[columnHeights[column]][column] != 0)
+	if (grid[columnHeights[column]][column] != 0) {
 		fprintf(stderr, "error: misplaced block\n");
+		return;
+	}
 
 	// add block and increase column height and row stuffing
 	grid[columnHeights[column]][column]++;
@@ -47,9 +49,33 @@ void Grid::enterSingleBlock(int column) {
 		currentHeight = columnHeights[column];
 }
 
+void Grid::enterSingleBlock (int row, int column) {
+	// check for errors
+	if (grid[row][column] != 0) {
+		fprintf(stderr, "error: misplaced block\n");
+		return;
+	}
+
+	// add block and increase row stuffing and possibly column height
+	grid[row][column]++;
+	rowStuffings[row]++;
+	if (row > columnHeights[column])
+		columnHeights[column] = row+1;
+
+
+	//TODO: check functionality
+	// update current height if needed
+	if (columnHeights[column] > currentHeight)
+		currentHeight = columnHeights[column];
+}
+
+void Grid::enterFullBlock(int grid[][], int position) {
+	;
+}
+
 void Grid::checkShift() {
-	// a little inefficient, but not much
-	// TODO: check only rows affected by the block
+	// a little inefficient, but not much: we could only check rows affected
+	// by the block.
 	for (int i = 0; i < GRID_HEIGHT; i++) {
 		if (rowStuffings[i] >= GRID_WIDTH)
 			shiftDown(i);
@@ -75,6 +101,9 @@ void Grid::shiftDown(int row) {
 	// change column heights (-1)
 	for (int j = 0; j < GRID_WIDTH; j++)
 		columnHeights[j]--;
+
+	// change current height
+	currentHeight--;
 }
 
 void Grid::printGrid() {

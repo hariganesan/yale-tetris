@@ -6,6 +6,9 @@
 #include <string>
 #include "Block.h"
 #include "Grid.h"
+//#include "SDL/SDL.h"
+//#include <OpenGL/gl.h>
+//#include <OpenGL/glu.h>
 
 using namespace std;
 
@@ -14,16 +17,21 @@ void runGame(); // runs the tetris game
 int main() {
 	cout << "running program\n" << endl;
 
-	Block b = Block();
 
-	b.printBlock();
+	//SDL_Init(SDL_INIT_EVERYTHING);
 
-	b.rotateBlockCCW();
-	b.rotateBlockCCW();
+	//SDL_Quit();
 
-	b.printBlock();
+	//Block b = Block();
 
-	//runGame();
+	//b.printBlock();
+
+	//b.rotateBlockCW();
+	//b.rotateBlockCCW();
+	//printf("//////////////\n");
+	//b.printBlock();
+
+	runGame();
 
 	return EXIT_SUCCESS;
 }
@@ -42,21 +50,32 @@ void runGame() {
 		//if not, then ask again
 		stringstream ss;
 		string input;
-		int position;
+		int position, row;
+
 		do {
 			ss.str("");
 			ss.clear();
-			cout << "Enter a number:\n";
+			cout << "Enter row:\n";
+			cin >> input;
+			ss << input;
+			ss >> row;
+		} while (ss.fail() || row >= GRID_HEIGHT || row < 0);
+
+		do {
+			ss.str("");
+			ss.clear();
+			cout << "Enter column:\n";
 			cin >> input;
 			ss << input;
 			ss >> position;
-		} while (ss.fail() || position > GRID_WIDTH || position < 1);
+		} while (ss.fail() || position >= GRID_WIDTH || position < 0);
 
-		// update grid state
-		g.enterSingleBlock(position - 1);
+		g.enterSingleBlock(row, position);
+		//g.enterSingleBlock(position);
 		g.checkShift();
 		// update grid display/display grid
 		g.printGrid();
+		//cout << g.getCurrentHeight() << endl;
 	}
 
 	cout << "\nGame Over" << endl;

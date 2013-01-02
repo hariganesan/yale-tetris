@@ -4,6 +4,8 @@
 # compiler options
 CC=g++
 CFLAGS=-pedantic -Wall
+SDLFLAGS=-framework SDL -framework Cocoa
+GLFLAGS=-framework OpenGL
 
 # build tetris and remove .o files
 all: tetris clean
@@ -11,8 +13,8 @@ all: tetris clean
 tetris: tetris.o Grid.o Block.o
 	$(CC) -o $@ $^
 
-tetris.o: tetris.cpp Grid.h Block.h
-	$(CC) $(CFLAGS) -c $^
+tetris.o: tetris.cpp SDLmain.m Grid.h Block.h
+	$(CC) $(CFLAGS) $(SDLFLAGS) -c $^
 
 Grid.o: Grid.cpp Grid.h
 	$(CC) $(CFLAGS) -c $^
