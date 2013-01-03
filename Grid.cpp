@@ -69,7 +69,7 @@ void Grid::enterSingleBlock (int row, int column) {
 		currentHeight = columnHeights[column];
 }
 
-void Grid::enterFullBlock(int grid[][], int position) {
+void Grid::enterFullBlock(int** grid, int position) {
 	;
 }
 

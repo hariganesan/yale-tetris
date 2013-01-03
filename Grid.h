@@ -20,6 +20,7 @@ public:
 	int getCurrentHeight();
 	void enterSingleBlock(int column); // enter block given column
 	void enterSingleBlock(int row, int column); // enter block given row & column
+	void enterFullBlock(int** grid, int position);
 	void checkShift(); // check to see which (if any) shifts need to be made
 	void shiftDown(int row); // shift down one based on row
 	void printGrid(); // print out entire grid

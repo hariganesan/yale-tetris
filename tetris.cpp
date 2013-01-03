@@ -1,12 +1,13 @@
 // Hari Ganesan 12/19/12
 // Yale-Tetris
 
+//#include "SDL/SDLMain.h"
+#include "SDL/SDL.h"
 #include <iostream>
 #include <sstream>
 #include <string>
 #include "Block.h"
 #include "Grid.h"
-//#include "SDL/SDL.h"
 //#include <OpenGL/gl.h>
 //#include <OpenGL/glu.h>
 
@@ -14,13 +15,13 @@ using namespace std;
 
 void runGame(); // runs the tetris game
 
-int main() {
+int main(int argc, char **argv) {
 	cout << "running program\n" << endl;
 
 
-	//SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_Init(SDL_INIT_EVERYTHING);
 
-	//SDL_Quit();
+	SDL_Quit();
 
 	//Block b = Block();
 
