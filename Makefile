@@ -6,13 +6,13 @@ CC=g++
 CFLAGS=-pedantic -Wall
 SDL=-lSDL -lSDLmain
 COCOA=-framework Cocoa
-GLFLAGS=-framework OpenGL
+GL=-framework OpenGL
 
 # build tetris and remove .o files
 all: tetris clean
 
 tetris: tetris.o Grid.o Block.o
-	$(CC) -o $@ $(COCOA) $(SDL) $^
+	$(CC) -o $@ $(COCOA) $(GL) $(SDL) $^
 
 tetris.o: tetris.cpp Grid.h Block.h
 	$(CC) $(CFLAGS) -c $^
