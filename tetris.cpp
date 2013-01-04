@@ -6,24 +6,19 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include "Block.h"
-#include "Grid.h"
-//#include <OpenGL/gl.h>
-//#include <OpenGL/glu.h>
+#include "Shape.h"
 
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 600
-
+// window dimensions
+const int WINDOW_WIDTH  = 600;
+const int WINDOW_HEIGHT = 600;
 
 using namespace std;
 
 bool checkEvents(SDL_Event event); // checks all events
-void executeLogic(); // runs the tetris game
-void render(); // renders all graphics and audio to window
+void executeLogic(Grid g); // runs the tetris game
+void render(Grid g); // renders all graphics and audio to window
 
 int main(int argc, char **argv) {
-	cout << "running program\n" << endl;
-
 	// initialize SDL and OpenGL
 	SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -49,13 +44,16 @@ int main(int argc, char **argv) {
 	cout << "OpenGL is running\n";
 	bool isRunning = true; // if game is not yet over
 
+	Grid g = Grid();
+	g.enterSingleBlock(3,4);
 	// main loop
 	while (isRunning) {
 		isRunning = checkEvents(event);
 
-		//executeLogic();
+		//executeLogic(g);
 
-		render();
+
+		render(g);
 	}
 	//Block b = Block();
 
@@ -88,10 +86,7 @@ bool checkEvents(SDL_Event event) {
 	return isRunning;
 }
 
-void executeLogic() {
-	cout << "game initialized" << endl;
-	Grid g = Grid();
-
+void executeLogic(Grid g) {
 	// main loop
 	// while game is not over (height != 10)
 	while (g.getCurrentHeight() != GRID_HEIGHT) {
@@ -126,7 +121,7 @@ void executeLogic() {
 		//g.enterSingleBlock(position);
 		g.checkShift();
 		// update grid display/display grid
-		g.printGrid();
+		g.printTextGrid();
 		//cout << g.getCurrentHeight() << endl;
 	}
 
@@ -137,25 +132,48 @@ void executeLogic() {
 
 // possible arguments for glBegin(): GL_POINTS, GL_LINES, GL_LINE_STRIP, 
 // GL_LINE_LOOP, GL_QUADS, GL_TRIANGLES, GL_POLYGON
-void render() {
+void render(Grid g) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPushMatrix();
 	// TODO: change to 0,1 for depth
-	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT,0, -1, 1); // set matrix
+	glOrtho(0, WINDOW_WIDTH, WINDOW_HEIGHT, 0, -1, 1); // set matrix
 
+	////////////////
 	// BEGIN DRAWING
+	////////////////
 
-	glColor4ub(120,120,120,255);
-	glBegin(GL_LINE_LOOP);
+	// GRID
 
-	glVertex2f(0,0);
-	glVertex2f(50,0);
-	glVertex2f(50,50);
-	glVertex2f(0,50);
+	// gray color for grid
+	glColor4ub(50, 50, 50, 255);
 
-	glEnd();
+	// horizontal lines
+	for (int i = 0; i <= GRID_HEIGHT; i++) {
+		glBegin(GL_LINES);
 
+		glVertex2f(150, 250+i*BLOCK_DIM);
+		glVertex2f(150+GRID_WIDTH*BLOCK_DIM, 250+i*BLOCK_DIM);
+
+		glEnd();
+	}
+
+	// vertical lines
+	for (int i = 0; i <= GRID_WIDTH; i++) {
+		glBegin(GL_LINES);
+
+		glVertex2f(150+i*BLOCK_DIM, 250);
+		glVertex2f(150+i*BLOCK_DIM, 250+GRID_HEIGHT*BLOCK_DIM);
+
+		glEnd();
+	}
+
+	// white color for blocks
+	glColor4ub(230, 230, 230, 255);
+	g.displayGrid(150, 250);
+
+	///////////////
 	// END DRAWING
+	////////////////
 
 	glPopMatrix();
 	SDL_GL_SwapBuffers();

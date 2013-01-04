@@ -49,7 +49,7 @@ void Grid::enterSingleBlock(int column) {
 		currentHeight = columnHeights[column];
 }
 
-void Grid::enterSingleBlock (int row, int column) {
+void Grid::enterSingleBlock (int column, int row) {
 	// check for errors
 	if (grid[row][column] != 0) {
 		fprintf(stderr, "error: misplaced block\n");
@@ -67,10 +67,6 @@ void Grid::enterSingleBlock (int row, int column) {
 	// update current height if needed
 	if (columnHeights[column] > currentHeight)
 		currentHeight = columnHeights[column];
-}
-
-void Grid::enterFullBlock(int** grid, int position) {
-	;
 }
 
 void Grid::checkShift() {
@@ -106,7 +102,7 @@ void Grid::shiftDown(int row) {
 	currentHeight--;
 }
 
-void Grid::printGrid() {
+void Grid::printTextGrid() {
 	for (int i = GRID_HEIGHT - 1; i >= 0; i--) {
 		cout << i << ": ";
 
@@ -114,5 +110,23 @@ void Grid::printGrid() {
 			cout << grid[i][j] << " ";
 
 		cout << endl;
+	}
+}
+
+void Grid::displayGrid(int x, int y) {
+	for (int i = 0; i < GRID_HEIGHT; i++) {
+		for (int j = 0; j < GRID_WIDTH; j++) {
+			if (grid[i][j] == 1) {
+				glBegin(GL_QUADS);
+
+				// we need to flip the vertical axis
+				glVertex2f(x+j*BLOCK_DIM, y+BLOCK_DIM*GRID_HEIGHT-i*BLOCK_DIM);
+				glVertex2f(x+(j+1)*BLOCK_DIM, y+BLOCK_DIM*GRID_HEIGHT-i*BLOCK_DIM);
+				glVertex2f(x+(j+1)*BLOCK_DIM, y+BLOCK_DIM*GRID_HEIGHT-(i+1)*BLOCK_DIM);
+				glVertex2f(x+j*BLOCK_DIM, y+BLOCK_DIM*GRID_HEIGHT-(i+1)*BLOCK_DIM);
+
+				glEnd();
+			}
+		}
 	}
 }

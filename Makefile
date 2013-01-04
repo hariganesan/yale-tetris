@@ -11,16 +11,16 @@ GL=-framework OpenGL
 # build tetris and remove .o files
 all: tetris clean
 
-tetris: tetris.o Grid.o Block.o
+tetris: tetris.o Grid.o Shape.o
 	$(CC) -o $@ $(COCOA) $(GL) $(SDL) $^
 
-tetris.o: tetris.cpp Grid.h Block.h
+tetris.o: tetris.cpp Shape.h
 	$(CC) $(CFLAGS) -c $^
 
 Grid.o: Grid.cpp Grid.h
 	$(CC) $(CFLAGS) -c $^
 
-Block.o: Block.cpp Block.h
+Shape.o: Shape.cpp Shape.h Grid.h
 	$(CC) $(CFLAGS) -c $^
 
 clean:

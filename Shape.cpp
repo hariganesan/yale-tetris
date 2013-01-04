@@ -1,23 +1,23 @@
 // Hari Ganesan 12/20/12
-// Block use for yale-tetris
+// Shape use for yale-tetris
 
-#include "Block.h"
+#include "Shape.h"
 
 using namespace std;
 
-Block::Block() {
-	// initialize block as 0s
-	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++) {
+Shape::Shape() {
+	// initialize Shape as 0s
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
 			grid[i][j] = 0;
 		}
 	}
 
-	// NOTE: based on 4x4 block
-	// randomly select the block
+	// NOTE: based on 4x4 Shape
+	// randomly select the Shape
 	int randomNumber = (int) time(NULL);
 	switch (randomNumber % 7) {
-		// L blocks
+		// L Shapes
 		case 0:
 			grid[0][1] = 1;
 			grid[0][2] = 1;
@@ -30,7 +30,7 @@ Block::Block() {
 			grid[0][2] = 1;
 			grid[1][2] = 1;
 			break;
-		// S blocks
+		// S Shapes
 		case 2:
 			grid[0][1] = 1;
 			grid[0][2] = 1;
@@ -43,21 +43,21 @@ Block::Block() {
 			grid[1][1] = 1;
 			grid[1][2] = 1;
 			break;
-		// I block
+		// I Shape
 		case 4:
 			grid[0][1] = 1;
 			grid[0][2] = 1;
 			grid[0][0] = 1;
 			grid[0][3] = 1;
 			break;
-		// O block
+		// O Shape
 		case 5:
 			grid[0][0] = 1;
 			grid[0][1] = 1;
 			grid[1][0] = 1;
 			grid[1][1] = 1;
 			break;
-		// T block
+		// T Shape
 		case 6:
 			grid[0][1] = 1;
 			grid[0][2] = 1;
@@ -69,74 +69,78 @@ Block::Block() {
 	}
 }
 
-void Block::rotateBlockCW() {
-	int newGrid[MAX_BLOCK_DIM][MAX_BLOCK_DIM];
+void Shape::rotateShapeCW() {
+	int newGrid[SHAPE_DIM][SHAPE_DIM];
 
 	// push to new array
-	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++) {
-			newGrid[MAX_BLOCK_DIM - j - 1][i] = grid[i][j];
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
+			newGrid[SHAPE_DIM - j - 1][i] = grid[i][j];
 		}
 	}
 
 	// push down
 	while (newGrid[0][0] != 1 && newGrid[0][1] != 1 && newGrid[0][2] != 1) {
-		for (int i = 0; i < MAX_BLOCK_DIM - 1; i++) {
-			for (int j = 0; j < MAX_BLOCK_DIM; j++) {
+		for (int i = 0; i < SHAPE_DIM - 1; i++) {
+			for (int j = 0; j < SHAPE_DIM; j++) {
 				newGrid[i][j] = newGrid[i+1][j];
 			}
 		}
 
-		for (int j = 0; j < MAX_BLOCK_DIM; j++) {
-			newGrid[MAX_BLOCK_DIM - 1][j] = 0;
+		for (int j = 0; j < SHAPE_DIM; j++) {
+			newGrid[SHAPE_DIM - 1][j] = 0;
 		}
 	}
 
 	// move back to original array
-	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++) {
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
 			grid[i][j] = newGrid[i][j];
 		}
 	}
 }
 
-void Block::rotateBlockCCW() {
-	int newGrid[MAX_BLOCK_DIM][MAX_BLOCK_DIM];
+void Shape::rotateShapeCCW() {
+	int newGrid[SHAPE_DIM][SHAPE_DIM];
 
 	// push to new array
-	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++)	{
-			newGrid[j][MAX_BLOCK_DIM - i - 1] = grid[i][j];
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++)	{
+			newGrid[j][SHAPE_DIM - i - 1] = grid[i][j];
 		}
 	}
 
 	// push left
 	while (newGrid[0][0] != 1 && newGrid[1][0] != 1 && newGrid[2][0] != 1) {
-		for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-			for (int j = 0; j < MAX_BLOCK_DIM - 1; j++) {
+		for (int i = 0; i < SHAPE_DIM; i++) {
+			for (int j = 0; j < SHAPE_DIM - 1; j++) {
 				newGrid[i][j] = newGrid[i][j+1];
 			}
 		}
 
-		for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-			newGrid[i][MAX_BLOCK_DIM - 1] = 0;
+		for (int i = 0; i < SHAPE_DIM; i++) {
+			newGrid[i][SHAPE_DIM - 1] = 0;
 		}
 	}
 
 	// push back to original array
-	for (int i = 0; i < MAX_BLOCK_DIM; i++) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++) {
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
 			grid[i][j] = newGrid[i][j];
 		}
 	}
 }
 
-void Block::printBlock() {
-	for (int i = MAX_BLOCK_DIM - 1; i >= 0; i--) {
-		for (int j = 0; j < MAX_BLOCK_DIM; j++) {
+void Shape::printTextShape() {
+	for (int i = SHAPE_DIM - 1; i >= 0; i--) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
 			cout << grid[i][j] << " ";
 		}
 
 		cout << endl;
 	}
+}
+
+void Shape::displayShape(Grid g, int x, int y) {
+	;
 }
