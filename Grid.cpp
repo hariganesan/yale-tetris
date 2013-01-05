@@ -11,11 +11,7 @@ Grid::Grid() {
 	currentHeight = 0;
 
 	// initialize grid
-	for (int i = 0; i < GRID_HEIGHT; i++) {
-		for (int j = 0; j < GRID_WIDTH; j++) {
-			grid[i][j] = 0;
-		}
-	}
+	clearGrid();
 
 	// initialize row stuffings
 	for (int i = 0; i < GRID_HEIGHT; i++) {
@@ -30,6 +26,10 @@ Grid::Grid() {
 
 int Grid::getCurrentHeight() {
 	return currentHeight;
+}
+
+bool Grid::blockExists(int column, int row) {
+	return (grid[row][column] == 1) ? true : false;
 }
 
 void Grid::enterSingleBlock(int column) {
@@ -49,11 +49,11 @@ void Grid::enterSingleBlock(int column) {
 		currentHeight = columnHeights[column];
 }
 
-void Grid::enterSingleBlock (int column, int row) {
+bool Grid::enterSingleBlock (int column, int row) {
 	// check for errors
 	if (grid[row][column] != 0) {
-		fprintf(stderr, "error: misplaced block\n");
-		return;
+		fprintf(stderr, "error: misplaced block at %d, %d\n", column, row);
+		return false;
 	}
 
 	// add block and increase row stuffing and possibly column height
@@ -67,19 +67,38 @@ void Grid::enterSingleBlock (int column, int row) {
 	// update current height if needed
 	if (columnHeights[column] > currentHeight)
 		currentHeight = columnHeights[column];
+
+	return true;
 }
 
-void Grid::checkShift() {
+void Grid::removeSingleBlock(int column, int row) {
+	if (grid[row][column] != 1) {
+		fprintf(stderr, "error: cannot remove block at %d, %d\n", column, row);
+		return;
+	}
+
+	grid[row][column]--;
+	rowStuffings[row]--;
+	// TODO: columnheights, currentheight
+
+}
+
+int Grid::checkShift() {
+	int count = 0;
 	// a little inefficient, but not much: we could only check rows affected
 	// by the block.
 	for (int i = 0; i < GRID_HEIGHT; i++) {
-		if (rowStuffings[i] >= GRID_WIDTH)
+		if (rowStuffings[i] >= GRID_WIDTH) {
 			shiftDown(i);
+			i -= 1;
+			count++;
+		}
 	}
+
+	return count;
 }
 
 void Grid::shiftDown(int row) {
-	cout << row << endl;
 	for (int i = row; i < (GRID_HEIGHT - 1); i++) {
 		// move grid
 		for (int j = 0; j < GRID_WIDTH; j++)
@@ -127,6 +146,14 @@ void Grid::displayGrid(int x, int y) {
 
 				glEnd();
 			}
+		}
+	}
+}
+
+void Grid::clearGrid() {
+	for (int i = 0; i < GRID_HEIGHT; i++) {
+		for (int j = 0; j < GRID_WIDTH; j++) {
+			grid[i][j] = 0;
 		}
 	}
 }

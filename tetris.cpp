@@ -14,9 +14,9 @@ const int WINDOW_HEIGHT = 600;
 
 using namespace std;
 
-bool checkEvents(SDL_Event event); // checks all events
-void executeLogic(Grid g); // runs the tetris game
-void render(Grid g); // renders all graphics and audio to window
+void runGame(); // runs the tetris game
+bool checkEvents(SDL_Event event, Shape *s, Grid *g); // checks all events
+void render(Grid *g); // renders all graphics and audio to window
 
 int main(int argc, char **argv) {
 	// initialize SDL and OpenGL
@@ -40,99 +40,94 @@ int main(int argc, char **argv) {
 	glLoadIdentity(); // save state
 	glDisable(GL_DEPTH_TEST); // disable 3D drawing
 
-	SDL_Event event;
-	cout << "OpenGL is running\n";
-	bool isRunning = true; // if game is not yet over
-
-	Grid g = Grid();
-	g.enterSingleBlock(3,4);
-	// main loop
-	while (isRunning) {
-		isRunning = checkEvents(event);
-
-		//executeLogic(g);
-
-
-		render(g);
-	}
-	//Block b = Block();
-
-	//b.printBlock();
-
-	//b.rotateBlockCW();
-	//b.rotateBlockCCW();
-	//printf("//////////////\n");
-	//b.printBlock();
+	runGame();
 
 	SDL_Quit();
 	return EXIT_SUCCESS;
 }
 
-bool checkEvents(SDL_Event event) {
+void runGame() {
+	cout << "game running" << endl;
+
+	bool isRunning = true; // if game is not yet over
+	const int SPEED = 1; // speed of falling shape (1-5)
+	int numShifts = 0; // number of shifts each turn
+	int score = 0; // total score!
+	// starting position of shape
+	int SHAPE_X = GRID_WIDTH/2;
+	int SHAPE_Y = GRID_HEIGHT - 4;
+
+	SDL_Event event;
+	Grid g = Grid();
+	Shape s = Shape(SHAPE_X, SHAPE_Y);
+
+	// main loop
+	while (isRunning) {
+		isRunning = checkEvents(event, &s, &g);
+
+		// if there is a collision
+		if (!s.moveDown(&g, SPEED)) {
+			s.displayShape(&g);
+			s.destroyShape(&g);
+
+			// check for full rows
+			if ((numShifts = g.checkShift()) > 0) {
+				score += numShifts*numShifts*10;
+			} else {
+				score += 5;
+			}
+
+			s = Shape(SHAPE_X, SHAPE_Y);
+
+			if (!s.displayShape(&g)) // game is over!
+				isRunning = false;
+
+			cout << score << endl;
+		} else {
+			s.displayShape(&g);
+		}
+
+		render(&g);
+		s.removeShape(&g);
+	}
+}
+
+//TODO: work with keydowns
+bool checkEvents(SDL_Event event, Shape *s, Grid *g) {
 	bool isRunning = true;
 
 	while (SDL_PollEvent(&event)) {
 		// window was closed or escape was pressed
 		if (event.type == SDL_QUIT || 
-			 (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_ESCAPE)) {
+			 (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_q)) {
 			isRunning = false;
+		// w turns screen white
 		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_w) {
 			glClearColor(1,1,1,1);
+		// b turns screen black
 		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_b) {
 			glClearColor(0,0,0,1);
+		// down moves shape down
+		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_DOWN) {
+			(*s).moveDown(g, MAX_SPEED);
+		// up rotates CCW
+		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_UP) {
+			(*s).rotateShapeCCW();
+		// move left
+		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_LEFT) {
+			(*s).moveLeft(g);
+		// move right
+		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_RIGHT) {
+			(*s).moveRight(g);
 		}
 	}
 
 	return isRunning;
 }
 
-void executeLogic(Grid g) {
-	// main loop
-	// while game is not over (height != 10)
-	while (g.getCurrentHeight() != GRID_HEIGHT) {
-		// grab and display next piece
-		// allow input for position, rotation
-
-		//check to see if input is a number
-		//if not, then ask again
-		stringstream ss;
-		string input;
-		int position, row;
-
-		do {
-			ss.str("");
-			ss.clear();
-			cout << "Enter row:\n";
-			cin >> input;
-			ss << input;
-			ss >> row;
-		} while (ss.fail() || row >= GRID_HEIGHT || row < 0);
-
-		do {
-			ss.str("");
-			ss.clear();
-			cout << "Enter column:\n";
-			cin >> input;
-			ss << input;
-			ss >> position;
-		} while (ss.fail() || position >= GRID_WIDTH || position < 0);
-
-		g.enterSingleBlock(row, position);
-		//g.enterSingleBlock(position);
-		g.checkShift();
-		// update grid display/display grid
-		g.printTextGrid();
-		//cout << g.getCurrentHeight() << endl;
-	}
-
-	cout << "\nGame Over" << endl;
-
-	return;
-}
-
 // possible arguments for glBegin(): GL_POINTS, GL_LINES, GL_LINE_STRIP, 
 // GL_LINE_LOOP, GL_QUADS, GL_TRIANGLES, GL_POLYGON
-void render(Grid g) {
+void render(Grid *g) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPushMatrix();
 	// TODO: change to 0,1 for depth
@@ -168,8 +163,8 @@ void render(Grid g) {
 	}
 
 	// white color for blocks
-	glColor4ub(230, 230, 230, 255);
-	g.displayGrid(150, 250);
+	glColor4ub(220, 220, 220, 255);
+	(*g).displayGrid(150, 250);
 
 	///////////////
 	// END DRAWING

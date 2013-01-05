@@ -5,7 +5,14 @@
 
 using namespace std;
 
-Shape::Shape() {
+Shape::Shape(int initX, int initY) {
+	// set x and y
+	x = initX;
+	y = initY;
+
+	//reset timer
+	count = 0;
+
 	// initialize Shape as 0s
 	for (int i = 0; i < SHAPE_DIM; i++) {
 		for (int j = 0; j < SHAPE_DIM; j++) {
@@ -69,6 +76,7 @@ Shape::Shape() {
 	}
 }
 
+//TODO: check right edge
 void Shape::rotateShapeCW() {
 	int newGrid[SHAPE_DIM][SHAPE_DIM];
 
@@ -100,6 +108,7 @@ void Shape::rotateShapeCW() {
 	}
 }
 
+//TODO: check right edge
 void Shape::rotateShapeCCW() {
 	int newGrid[SHAPE_DIM][SHAPE_DIM];
 
@@ -141,6 +150,101 @@ void Shape::printTextShape() {
 	}
 }
 
-void Shape::displayShape(Grid g, int x, int y) {
+bool Shape::displayShape(Grid *g) {
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {	
+			if (grid[i][j] == 1 && !(*g).enterSingleBlock(x+i, y+j)) {
+				return false;
+			}
+		}
+	}
+
+	return true;
+}
+
+void Shape::removeShape(Grid *g) {
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {	
+			if (grid[i][j] == 1) {
+				(*g).removeSingleBlock(x+i, y+j);
+			}
+		}
+	}
+}
+
+// we need to check against a) edges and b) collisions
+void Shape::moveLeft(Grid *g) {
+	bool collision = false;
+
+	// move over and check new (1)s on grid
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
+			if (grid[i][j] == 1) {
+				// check edge/collision
+				if (x+i-1 < 0 || (*g).blockExists(x+i-1, y+j)) {
+					collision = true;
+				}
+			}
+		}
+	}	
+
+	// update x-y
+	if (!collision) {
+		x -= 1;
+	}
+}
+
+void Shape::moveRight(Grid *g) {
+	bool collision = false;
+
+	// move over and check new (1)s on grid
+	for (int i = 0; i < SHAPE_DIM; i++) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
+			if (grid[i][j] == 1) {
+				// check edge/collision
+				if (x+i+1 >= GRID_WIDTH || (*g).blockExists(x+i+1, y+j)) {
+					collision = true;
+				}
+			}
+		}
+	}	
+
+	// update x-y
+	if (!collision) {
+		x += 1;
+	}
+}
+
+bool Shape::moveDown(Grid *g, const int SPEED) {
+	bool collision = false;
+	count += SPEED;
+
+	// if time, then move down
+	if (count > MAX_SPEED) {
+		count = 0;
+
+		// move down and check new (1)s on grid
+		for (int i = 0; i < SHAPE_DIM; i++) {
+			for (int j = 0; j < SHAPE_DIM; j++) {
+				if (grid[i][j] == 1) {
+					// check edge/collision
+					if (y+j-1 < 0 || (*g).blockExists(x+i, y+j-1)) {
+						collision = true;
+					}
+				}
+			}
+		}	
+
+		// update x-y
+		if (!collision) {
+			y -= 1;
+		}
+	}
+
+	return !collision;
+}
+
+void Shape::destroyShape(Grid *g) {
+	// no need to destroy if shape was allocated statically
 	;
 }
