@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-const int GRID_HEIGHT = 10;
+const int GRID_HEIGHT = 15;
 const int GRID_WIDTH = 10;
 
 const int BLOCK_DIM = 25; // single block width and height
@@ -20,7 +20,7 @@ private:
 	int currentSpeed; // current speed
 public:
 	Grid(); // default constructor; initializes grid
-	
+
 	int getCurrentHeight();
 	bool blockExists(int column, int row); // checks to see if block is at (r, c)
 	void enterSingleBlock(int column); // enter block given column
