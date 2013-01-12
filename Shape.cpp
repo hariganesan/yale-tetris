@@ -109,7 +109,7 @@ void Shape::rotateShapeCW() {
 }
 
 //TODO: check right edge
-void Shape::rotateShapeCCW() {
+void Shape::rotateShapeCCW(Grid *g) {
 	int newGrid[SHAPE_DIM][SHAPE_DIM];
 
 	// push to new array
@@ -136,6 +136,17 @@ void Shape::rotateShapeCCW() {
 	for (int i = 0; i < SHAPE_DIM; i++) {
 		for (int j = 0; j < SHAPE_DIM; j++) {
 			grid[i][j] = newGrid[i][j];
+		}
+	}
+	
+	// check right edge of grid
+	const int oldX = x;
+	for (int i = SHAPE_DIM - 1; oldX + i >= GRID_WIDTH; i--) {
+		for (int j = 0; j < SHAPE_DIM; j++) {
+			if (newGrid[i][j] == 1) {
+				x -= 1;
+				break;
+			}
 		}
 	}
 }

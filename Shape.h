@@ -25,7 +25,7 @@ public:
 	Shape(int initX, int initY); // initializes shape (set of blocks)
 
 	void rotateShapeCW(); // rotates Shape clockwise
-	void rotateShapeCCW(); // rotates Shape counter-clockwise
+	void rotateShapeCCW(Grid *g); // rotates Shape counter-clockwise
 	void printTextShape(); // print the Shape to stdout
 	bool displayShape(Grid *g); // print Shape to grid at x,y
 	void removeShape(Grid *g); // remove Shape from grid at x, y
