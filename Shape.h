@@ -20,7 +20,7 @@ private:
 	int x;
 	int y;
 	// used for falling shape
-	int count;
+	int fallCount;
 public:
 	Shape(int initX, int initY); // initializes shape (set of blocks)
 

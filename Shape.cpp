@@ -10,8 +10,8 @@ Shape::Shape(int initX, int initY) {
 	x = initX;
 	y = initY;
 
-	//reset timer
-	count = 0;
+	// initialize timer
+	fallCount = 0;
 
 	// initialize Shape as 0s
 	for (int i = 0; i < SHAPE_DIM; i++) {
@@ -228,11 +228,11 @@ void Shape::moveRight(Grid *g) {
 
 bool Shape::moveDown(Grid *g, const int SPEED) {
 	bool collision = false;
-	count += SPEED;
+	fallCount += SPEED;
 
 	// if time, then move down
-	if (count > MAX_SPEED) {
-		count = 0;
+	if (fallCount > MAX_SPEED) {
+		fallCount = 0;
 
 		// move down and check new (1)s on grid
 		for (int i = 0; i < SHAPE_DIM; i++) {
