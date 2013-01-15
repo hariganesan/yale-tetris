@@ -4,9 +4,9 @@
 # compiler options
 CC=g++
 CFLAGS=-pedantic -Wall -I/sw/include -L/sw/lib
-SDL=-lSDLmain -framework SDL -framework SDL_ttf
+SDL=-lSDLmain -lSDL -lSDL_ttf -lSDL_mixer
 COCOA=-framework Cocoa
-GL=-framework OpenGL -L/sw/lib -lfreeglut
+GL=-framework OpenGL -L/sw/lib
 
 # build tetris and remove .o files
 all: tetris clean

@@ -2,6 +2,7 @@
 // Yale-Tetris
 
 #include "SDL/SDL.h"
+#include "SDL/SDL_mixer.h"
 #include "SDL/SDL_opengl.h"
 #include "SDL_ttf/SDL_ttf.h"
 //#include "FTGL/ftgl.h"
@@ -21,14 +22,20 @@ const int WINDOW_HEIGHT = 600;
 const int GRID_X = 175;
 
 // font
+TTF_Font *font;
 const char *fontpath = "fonts/chintzy.ttf";
+
+// music
+Mix_Music *music = NULL;
+const char *musicpath = "nonst.mid";
 
 using namespace std;
 
 void runGame(); // runs the tetris game
 bool checkEvents(SDL_Event event, Shape *s, Grid *g, bool *isPaused); // checks all events
-void render(Grid *g, int score, TTF_Font *font, SDL_Color fontColor); // renders all graphics and audio to window
-void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, SDL_Rect *location);
+void render(Grid *g, int score, SDL_Color fontColor); // renders all graphics and audio to window
+void SDL_GL_RenderText(const char *text, SDL_Color color, SDL_Rect *location);
+void toggleMusic(); // toggles music on and off
 
 int main(int argc, char **argv) {
 	// initialize SDL, TTF, and OpenGL
@@ -54,8 +61,23 @@ int main(int argc, char **argv) {
 	glLoadIdentity(); // save state
 	glDisable(GL_DEPTH_TEST); // disable 3D drawing
 
+	//initialize audio properties
+	int audio_rate = 22050;
+  Uint16 audio_format = AUDIO_S16;
+  int audio_channels = 2;
+  int audio_buffers = 4096;
+  
+  if(Mix_OpenAudio(audio_rate, audio_format, audio_channels, audio_buffers)) {
+    printf("Unable to open audio!\n");
+    exit(1);
+  } else {
+  	toggleMusic();
+  }
+
 	runGame();
 
+	Mix_CloseAudio();
+	TTF_CloseFont(font);
 	TTF_Quit();
 	SDL_Quit();
 	return EXIT_SUCCESS;
@@ -65,7 +87,7 @@ void runGame() {
 	cout << "game running" << endl;
 
 	//FTFont *font = new FTGLTextureFont(fontpath);
-	TTF_Font *font = TTF_OpenFont(fontpath, 48);
+	font = TTF_OpenFont(fontpath, 48);
 	SDL_Color fontColor = {200, 200, 200};
 	//SDL_Surface *text, *screen;
 	//font->FaceSize(32);
@@ -116,13 +138,12 @@ void runGame() {
 			timeElapsed++;
 		}
 
-		render(&g, score, font, fontColor);
+		render(&g, score, fontColor);
 		s.removeShape(&g);
 	}
 
 	//SDL_FreeSurface(text);
 	//SDL_FreeSurface(screen);
-	TTF_CloseFont(font);
 }
 
 //TODO: work with keydowns
@@ -143,6 +164,9 @@ bool checkEvents(SDL_Event event, Shape *s, Grid *g, bool *isPaused) {
 		// b turns screen black
 		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_b) {
 			glClearColor(0,0,0,1);
+		// music toggle
+		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_m) {
+			toggleMusic();
 		// down moves shape down
 		} else if (event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_DOWN) {
 			(*s).moveDown(g, MAX_SPEED);
@@ -163,7 +187,7 @@ bool checkEvents(SDL_Event event, Shape *s, Grid *g, bool *isPaused) {
 
 // possible arguments for glBegin(): GL_POINTS, GL_LINES, GL_LINE_STRIP, 
 // GL_LINE_LOOP, GL_QUADS, GL_TRIANGLES, GL_POLYGON
-void render(Grid *g, int score, TTF_Font *font, SDL_Color fontColor) {
+void render(Grid *g, int score, SDL_Color fontColor) {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPushMatrix();
 	// TODO: change to 0,1 for depth
@@ -212,7 +236,7 @@ void render(Grid *g, int score, TTF_Font *font, SDL_Color fontColor) {
 	location.x = 50;
 	location.y = 25;
 
-	SDL_GL_RenderText(score_char, font, fontColor, &location);
+	SDL_GL_RenderText(score_char, fontColor, &location);
 	
 	///////////////
 	// END DRAWING
@@ -223,7 +247,7 @@ void render(Grid *g, int score, TTF_Font *font, SDL_Color fontColor) {
 	SDL_Delay(33); // frame rate 30ms
 }
 
-void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, SDL_Rect *location)
+void SDL_GL_RenderText(const char *text, SDL_Color color, SDL_Rect *location)
 {
 	SDL_Surface *initial;
 	SDL_Surface *intermediary;
@@ -284,4 +308,17 @@ void SDL_GL_RenderText(const char *text, TTF_Font *font, SDL_Color color, SDL_Re
 	SDL_FreeSurface(initial);
 	SDL_FreeSurface(intermediary);
 	glDeleteTextures(1, &texture);
+}
+
+void toggleMusic() {
+	if (music == NULL) {
+		music = Mix_LoadMUS(musicpath);
+
+		// play infinite times
+		Mix_PlayMusic(music, -1);
+	} else {
+		Mix_HaltMusic();
+		Mix_FreeMusic(music);
+		music = NULL;
+	}
 }
